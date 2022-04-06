@@ -1,13 +1,13 @@
-resource "aws_instance" "web-1" {
+resource "aws_instance" "master" {
   ami                         = "ami-04505e74c0741db8d"
   availability_zone           = "us-east-1a"
-  instance_type               = "t2.nano"
+  instance_type               = "t2.micro"
   key_name                    = "LaptopKey"
   subnet_id                   = aws_subnet.subnet1-public.id
   vpc_security_group_ids      = ["${aws_security_group.allow_all.id}"]
   associate_public_ip_address = true
   tags = {
-    Name       = "Server-1"
+    Name       = "Docker-Master-01"
     Env        = "Prod"
     Owner      = "Sree"
     CostCenter = "ABCD"
@@ -18,7 +18,8 @@ resource "aws_instance" "web-1" {
         EOF
 }
 
-resource "aws_instance" "web-2" {
+resource "aws_instance" "workernodes" {
+  count                       = 4
   ami                         = "ami-04505e74c0741db8d"
   availability_zone           = "us-east-1a"
   instance_type               = "t2.micro"
@@ -27,7 +28,7 @@ resource "aws_instance" "web-2" {
   vpc_security_group_ids      = ["${aws_security_group.allow_all.id}"]
   associate_public_ip_address = true
   tags = {
-    Name       = "Server-2"
+    Name       = "Docker-Worker-0${count.index + 1}"
     Env        = "Prod"
     Owner      = "Sree"
     CostCenter = "ABCD"
@@ -38,7 +39,8 @@ resource "aws_instance" "web-2" {
         EOF
 }
 
-resource "aws_instance" "web-3" {
+resource "aws_instance" "extramasters" {
+  count                       = 3
   ami                         = "ami-04505e74c0741db8d"
   availability_zone           = "us-east-1a"
   instance_type               = "t2.micro"
@@ -47,7 +49,7 @@ resource "aws_instance" "web-3" {
   vpc_security_group_ids      = ["${aws_security_group.allow_all.id}"]
   associate_public_ip_address = true
   tags = {
-    Name       = "Server-3"
+    Name       = "Docker-Master-0${count.index + 2}"
     Env        = "Prod"
     Owner      = "Sree"
     CostCenter = "ABCD"
