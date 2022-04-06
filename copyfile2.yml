@@ -1,0 +1,17 @@
+---
+- hosts: docker_servers
+  gather_facts: no
+  become: yes
+  become_user: root
+  serial: 1
+  tasks:
+  - name: Generate Random
+    shell: date +%s
+    register: rannumber
+  - debug:
+      var: rannumber.stdout
+  - name: ansible copy file from remote to local.
+    fetch:
+     src: /etc/hostname
+     dest: /tmp/hostname{{ rannumber.stdout }} 
+     flat: yes 

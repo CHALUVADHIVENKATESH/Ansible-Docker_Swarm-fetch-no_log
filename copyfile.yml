@@ -1,0 +1,11 @@
+---
+- hosts: docker_servers
+  gather_facts: no
+  become: yes
+  become_user: root
+  tasks:
+  - name: ansible copy file from remote to local.
+    fetch:
+     src: /etc/hostname
+     dest: /tmp 
+
